@@ -1,19 +1,195 @@
 <?php include "db_conn.php"; 
-session_start();
 ob_start();
+include "head1.php";
+?>
+<?php
+if(!isset($_SESSION['id'])){
+      header("location:login_home.php");
+}
+
+$errors=array();
+  $username = "";
+  if(isset($_POST['submit']))
+  { 
+
+    $username =$_POST['name'];
+    $useremail=$_POST['email'];
+    $ct =$_POST['ct'];
+    $usermessage =$_POST['message'];
+ 
+    function countDigit($n)
+    {
+      
+         $count=strlen($n);
+
+            return $count;
+    }
+      
+      
+       // echo "<br>BHAD NE KAA ".$count;
+        
+    
+   
+
+    if(empty($username))
+    {
+      array_push($errors," Name required");
+    }
+    else
+    {
+      if (!preg_match("/^[a-zA-Z ]*$/",$username)) 
+      {
+               
+        array_push($errors," Only letters and white space allowed ");
+
+      }
+      
+  
+    }
+
+    if(empty($ct))
+    {
+      array_push($errors," Contact required");
+    } 
+    else
+    {
+      if(is_numeric($ct))
+      {
+         if(countDigit($ct)!=10)
+         {
+             array_push($errors," contact is invalid ");
+         }    
+      }
+    }
+
+    
+    if (empty($useremail))
+    {
+      array_push($errors," Email required");
+     // $c=$c+1;      
+    }
+    else
+    {
+      if(!filter_var($useremail, FILTER_VALIDATE_EMAIL)) 
+      {
+        array_push($errors," Invalid email Formate ");
+       // $c=$c+1;
+      }
+    }
+
+    
+
+
+    if(empty($usermessage))
+    {
+      array_push($errors," Message Required");
+    }
+
+    if(count($errors) == 0)
+    {
+
+      $em = "greenleaf.bhavani@gmail.com";
+      $ctt = $useremail;
+      $owner = $useremail;
+
+      $umsg = "Message : ".$usermessage;
+      $bodyy .="From: " . $username . "<br>";//line breaking in email
+      $bodyy .="Email: " . $useremail . "<br>";
+      $bodyy .="Contact: " . $ct . "<br>";
+
+      $body1 .="Green Leaf Feedback / Report";
+
+      $headers  = 'MIME-Version: 1.0' . "\r\n";
+      $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+       
+      // Create email headers
+      $headers .= 'From: '.$useremail."\r\n".
+          
+          'Reply-To: '.$ctt."\r\n" .
+          'X-Mailer: PHP/' . phpversion();
+       
+      // Compose a simple HTML email message
+      $message = '<html><body style="
+      color: black;
+      display: block;
+     
+      border-radius: 25px;
+      
+      background-size: cover;
+      
+      display: flex;
+      -webkit-box-shadow: 0 0px 20px 6px #baef49;
+    ">
+
+      
+      <div style="border: 5px solid #baef5e;
+      color: black;
+      display: block;
+      padding: 6%;
+      display: -ms-flexbox;
+      display: flex;
+      min-width: 0;
+      text-align:center;
+      word-wrap: break-word;
+     
+      background-clip: border-box;
+      border: 5px solid #baef5e;
+      margin-left: 11%;
+      background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+      box-shadow: 0 0px 20px 6px #9aff39;
+      background-position: 0 0;
+      color: black;
+      position: relative;
+      padding: 4%;
+      left: 19%;
+      height: 100%;
+      border-radius: 1.25rem;">
+      <table><tbody><th><h2 style="width: 97%;background-color: #8ee837;color: white;padding: 5px 9px;text-align: center;border-radius: 9px;box-shadow: 0 0px 11px 6px #9aff39;">Green Leaf Nursery </h2></th>';
+      $message .= '<tr class="noo" style="border: 5px solid #9aff39;background-color: white;
+      font-size: 15px;color: black;padding: 3% 19%;font-weight: 500;text-align: left;border-radius: 10px;-webkit-box-shadow: 0 0px 20px 6px #0a0a0a70;"><p>'.$bodyy.'</p></tr>';
+     
+      $message .= '<tr><p style="
+      border: 5px solid #9aff39;
+      background-color: white;
+      font-size: 15px;
+      color: black;
+      padding: 3% 9%;
+      font-weight: 500;
+      text-align: center;
+      border-radius: 10px;
+      -webkit-box-shadow: 0px 0px 20px 4px #9aff39f2;">'.$umsg.'</tr></p><tr><span style="padding:1% 11%;;
+      background-color: #baef5e;text-align: center;border-radius: 9px;color: white;">Thankyou so much</span></tr>';
+      $message .= '</tbody></table></div></body></html>';
+      
+      
+
+      $gone = mail($em, $body1, $message, $headers);
+
+    if($gone)
+    {
+        header("Location: contactUs.php?success=Your message is received, Thankyou for support :) ");
+    }
+    else
+    {
+        array_push($errors," Sending mail failed");
+    }
+    }  
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Green Leaf Nursery Web Profile Page</title>
+	<title>Green Leaf Nursery Web services Page</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="icon" type="image/png" href="tree1.png"/>
 
 	<!-- <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
 
 </head>
 <style>
@@ -59,6 +235,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 body, html {
+  
 	height: 100%;
 	font-family: SourceSansPro-Regular, sans-serif;
 }
@@ -183,6 +360,7 @@ iframe {
   left: 0;
   background: rgba(93,84,240,0.5);
   /* background: -webkit-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5)); */
+  /* background: -webkit-linear-gradient(right, #ed5aff9e, #5ce4ff6b); */
   background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
   background: -o-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5));
   background: -moz-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5));
@@ -200,14 +378,14 @@ iframe {
 }
 
 .wrap-contact100 {
-  width: 800px;
+    width: 800px;
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
-    padding: 72px 150px 25px 150px;
+    padding: 72px 116px 25px 116px;
     box-shadow: 0 3px 20px 0px rgb(0 0 0 / 10%);
     -moz-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0px 0px 20px 13px rgb(0 0 0 / 10%);
+    -webkit-box-shadow: 0px 0px 20px 15px rgb(0 0 0 / 18%);
     -o-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
     -ms-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
 }
@@ -221,13 +399,17 @@ iframe {
 }
 
 .contact100-form-title {
-  display: block;
+  padding: 2%;
+    display: block;
     font-family: SourceSansPro-Bold;
     font-size: 30px;
-    color: #333333;
+    color: black;
     line-height: 1.2;
+    border-radius: 25px;
     text-align: center;
-    padding-bottom: 34px;
+    /* border: 6px solid #dedede; */
+    -webkit-box-shadow: 0px 0px 20px 6px rgb(0 0 0 / 18%);
+    background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
 }
 
 /*------------------------------------------------------------------
@@ -251,44 +433,90 @@ iframe {
   line-height: 1.2;
 }
 .input1001 {
-  display: block;
+    display: block;
     width: 100%;
     background: transparent;
     font-family: SourceSansPro-Bold;
-    font-size: 16px;
+    font-size: 10px;
+    font-size: 15px;
     color: #4b2354;
     line-height: 3.2;
+    /* padding: 1% 12%; */
+    border: 3px solid #df97ff;
     overflow: hidden;
-    padding: 2% 30%;
+    padding: 6% 12%; /* padding: 2% 30%; */
     border-radius: 20px;
+    outline:none;
     transition: all 0.4s ease-in-out;
-    box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-  -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-  -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-  -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
 }
-.input-img {
-  display: block;
-    /* width: 100%; */
-    /* background: transparent; */
+.input100err {
+    display: block;
+    width: 100%;
+    background: transparent;
     font-family: SourceSansPro-Bold;
-    /* font-size: 16px; */
+    font-size: 10px;
+    font-size: 15px;
     color: #4b2354;
-    line-height: 1.2;
-    border: 3px dashed yellowgreen;
+    line-height: 2.2;
+    margin-top: 3%;
+    padding: 1% 12%;
+    border: 3px solid #df97ff;
+    overflow: hidden;
+    padding: 1% 12%;
     border-radius: 20px;
-    margin-bottom: 11px;
+    outline: none;
     transition: all 0.4s ease-in-out;
+    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 0px 20px 6px rgb(255 82 82 / 98%);
+    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    /* animation: andromeda 5s alternate infinite ease-in; */
 }
+/* @keyframes andromeda {
+  0%   {transform: scale(.8);}
+  100% {transform: scale(1);}
+} */
 
+.input100succ {
+display: block;
+    width: 100%;
+    background: transparent;
+    font-family: SourceSansPro-Bold;
+    font-size: 10px;
+    font-size: 15px;
+    color: #4b2354;
+    line-height: 3.2;
+    padding: 1% 12%;
+    border: 4px solid #b5ff82;
+    overflow: hidden;
+    padding: 1% 12%;
+    border-radius: 20px;
+    outline: none;
+    transition: all 3s ease-in-out;
+    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 0px 20px 6px #9aff39;
+    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    /* animation: andromeda1 1.5s alternate infinite cubic-bezier(0.55, 0.06, 0.68, 0.19); */
+}
+/* @keyframes andromeda1 {
+  0%   {transform: scale(.8);}
+  100% {transform: scale(1);}
+} */
 /*---------------------------------------------*/
 input.input100 {
   height: 51px;
     padding: 0 20px 0 23px;
     border-radius: 20px;
     transition: all 0.4s;
-    border: 3px solid rgb(151 255 217);;
+    border: 4px solid #50c5dcb3;
     /* box-shadow: 0 10px 30px 0px #ad3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -webkit-box-shadow: inset 0px 0px 11px 0px #ad4;
@@ -302,7 +530,7 @@ textarea.input100 {
     padding: 19px 20px 0 23px;
     border-radius: 20px;
     transition: all 0.4s;
-    border: 3px solid rgb(151 255 217);
+    border: 4px solid #50c5dcb3;
     /* box-shadow: 0 10px 30px 0px #ad3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -webkit-box-shadow: inset 0px 0px 20px 0px #ad4;
@@ -333,20 +561,7 @@ textarea.input100 {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 }
-.contact100-form-title {
-  padding: 2%;
-    display: block;
-    font-family: SourceSansPro-Bold;
-    font-size: 30px;
-    color: black;
-    line-height: 1.2;
-    border-radius: 25px;
-    text-align: center;
-    /* border: 6px solid #dedede; */
-    -webkit-box-shadow: 0px 0px 20px 6px rgb(0 0 0 / 18%);
-    margin-bottom: 10%;
-    background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
-}
+
 .file-typ{
   padding: 10px;
     background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
@@ -362,7 +577,7 @@ textarea.input100 {
   -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
 }
 
-.input100:focus + .focus-input100 {
+.input100:focus, + .focus-input100:hover {
   box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
@@ -370,7 +585,7 @@ textarea.input100 {
   -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
 }
 
-.input1001:hover , .input100:hover{
+.input1001:hover,:focus , .input100:hover,:focus{
   box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.15);
@@ -399,7 +614,7 @@ textarea.input100 {
 }
 
 .contact100-form-btn {
-  display: -webkit-box;
+    display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
@@ -409,7 +624,7 @@ textarea.input100 {
     padding: 0 20px;
     min-width: 160px;
     height: 42px;
-    background-color: #61d6ab;
+    background-color: #50c5dcb3;
     border-radius: 16px;
     font-family: JosefinSans-Bold;
     font-size: 14px;
@@ -422,18 +637,19 @@ textarea.input100 {
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s;
-    box-shadow: 0 10px 30px 0px #61d6ab;
+    box-shadow: 0 10px 30px 0px #5ce4ffb3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
-    -webkit-box-shadow: 0 10px 30px 0px #61d6ab;
+    -webkit-box-shadow: 0 10px 30px 0px #fa97ff;
     -o-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -ms-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
 }
 
 .contact100-form-btn:hover {
-  background-color: #40a285;
-    box-shadow: 0 10px 30px 0px #40a285;
+  background-color: #33a1b7b3;
+    border: 7px solid #5ce4ffb3;
+    box-shadow: 0 10px 30px 0px #5ce4ffb3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
-    -webkit-box-shadow: 0 10px 30px 0px #40a285;
+    -webkit-box-shadow: 0 10px 30px 0px #5ce4ffb3;
     -o-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
     -ms-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
 }
@@ -544,8 +760,36 @@ textarea.input100 {
     right: 10px;
   }
 }
+/*----------ROW COL-------------- */
 
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
 
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
 /*==================================================================
 [ Contact more ]*/
 
@@ -558,159 +802,83 @@ textarea.input100 {
 }
 
 .contact100-more-highlight {
-  color: #bd59d4;
+    color: #bd59d4;
 }
+
+  
 
 </style>
 <body>
-<?php 
-            if(isset($_SESSION['user_name']))
-            {
-            	$em = $_SESSION['user_name'];
-            	$query = "SELECT * FROM users WHERE email='$em'";
-            	$result= mysqli_query($conn,$query);
-            
-            	if(!$result)
-            	{
-            		echo "Query Failed  ".$query;
-              
-            	}
-            	else
-            	{
-            		while ($row = mysqli_fetch_assoc($result)) 
-            		{
-                  global $oldimg;
-
-            			$ids=$row["id"];
-            			$umail=$row['email'];
-            			$unm=$row['name'];
-                  $pass=$row['password'];
-                  $img=$row['img'];
-                  $contact=$row['contact'];  
-                  $address=$row['address'];
-                  // echo "-----------".strlen($contact);
-                  //echo "-------".$img , $contact , $address;
-                  if($contact == NULL && $img == NULL && $address == NULL)
-                  {
-                    $img = "prof.png";
-                    $contact =  $address = "";
-                    //echo "************".$img , $contact , $address;
-                  }
-                  $oldimg = $img;
-            		}
-            	}
-              if(isset($_POST['update_profile'])){
-
-
-                    $post_unm=$_POST['name'];
-                    $post_image = $_FILES['img']['name'];
-                    $post_image_temp = $_FILES['img']['tmp_name'];
-                    $post_contact=$_POST['contact'];  
-                    $post_address=$_POST['address'];
-                    if($post_image_temp!="") {
-                        move_uploaded_file($post_image_temp, "images/$post_image" );
-                    }
-                    else{
-                            $post_image = $oldimg;
-                    }
-                
-                  //echo "-----------".strlen($post_contact);
-                  if(strlen($post_contact) != 10)
-                  {
-                    // echo "contact should be 10 digit";
-                    echo "<script>alert('contact should be 10 digit');</script>";
-                  }
-                  else
-                  {
-
-                        $query = "UPDATE users SET name = '{$post_unm}',img = '{$post_image}',contact = '{$post_contact}', address= '{$post_address}' WHERE email = '{$em}'";
-         
-
-                        //echo "<br><br>".$query;
-              
-                       $update_post = mysqli_query($conn,$query);
-     
-                      if(!$update_post){
-     
-                       die("QUERY FAILED ." . mysqli_error($conn));
-        
-                      }
-                     header("refresh: 3");
-                  }
-              }
-            }
-            else
-            {
-                  $ids = $umail = $unm = $pass = $contact = $img = $address =" Guest User";
-                  sleep(2);
-                  header("location:login.php");
-            }	    
-
-        ?>
 
 
 	<div class="container-contact100">
 
-
+        
 		<div class="wrap-contact100">
 			<form class="contact100-form validate-form" method="post" enctype="multipart/form-data">
 				<span class="contact100-form-title">
-				Profile
-				</span>
+				Feedback / Report / Suggesion
+				</span><br>
+                <?php $me=""; if (count($errors) > 0): ?> 
+                    <?php foreach ($errors as $error): 
+                            $me.=" * ".$error." | ";
+                        ?>
+                        <?php endforeach ?>
+               
+                    <div class="wrap-input100 validate-input">
+				
+                        <textarea class="input100err" type="text" name="email" col="1" value="" disabled><?php echo $me; ?></textarea>
+					        <span class="focus-input100"></span>
+				    </div>
+                    <?php endif ?>
 
-       
-        <div class="wrap-input100 validate-input" data-validate = "">
-          <div class="input1001">
-          <img class="input-img" width="200" src="images/<?php echo $img; ?>" alt="">
-					<input  class="file-typ" type="file" name="img" placeholder="Your image" > 
-					<span class="focus-input100"></span>
-          </div>
-				</div>
+                    <?php if (isset($_GET['success'])) { ?> 
+          
+                        <div class="wrap-input100 validate-input">
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your name">
-					<input class="input100" type="text" name="name" value="<?php echo $unm; ?>" placeholder="User Name">
-					<span class="focus-input100" fa fa-home ></span>
-				</div>
+                        <input class="input100succ" type="text" name="email" value="<?php echo $_GET['success']; ?>" disabled>
+                         <span class="focus-input100"></span>
+                           </div>
+                    <?php } ?>       
+                  
+<hr>
+<br>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter email: e@a.x">
-					<input class="input100" type="text" name="email" value="<?php echo $umail; ?>" placeholder="Email" disabled>
-					<span class="focus-input100"></span>
-				</div>
+                            <div class="wrap-input100 validate-input">
+                             <!-- <label for="fname"><i class="fa fa-user"></i> First Name</label>    -->
+                             <input class="input100" type="text" name="name" value="" placeholder="Full Name">
+                        </div>
+
+                        <div class="wrap-input100 validate-input">
+                            <!-- <label for="lname"><i class="fa fa-user"></i> Last Name</label> -->
+                            <input class="input100" type="text" name="ct" value="" placeholder="Contact No.">
+                        </div>
         
-        <div class="wrap-input100 validate-input" data-validate = "Please enter contact">
-					<input class="input100" type="text" name="contact" value="<?php echo $contact;?>" placeholder="Your Contact No.">
+                <div class="wrap-input100 validate-input">
+				<!-- <label for="">Email</label>	 -->
+                <input class="input100" type="text" name="email" value="" placeholder="ab@gmail.com" >
 					<span class="focus-input100"></span>
 				</div>
-
-				<div class="wrap-input100 validate-input" data-validate = "">
-					<textarea class="input100" name="address"  placeholder="Your Address"><?php echo $address;?></textarea>
+     
+                <div class="wrap-input100 validate-input">
+                    <textarea class="input100" name="message"  placeholder="Your Massage / Suggestions  "></textarea>
 					<span class="focus-input100"></span>
-				</div>
-
-       
+                </div>    
 
 				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn" name="update_profile">
-						Update profile
+					<button class="contact100-form-btn" name="submit">
+						Submit
 					</button>
 				</div>
-    
 			</form>
 
 			<div class="contact100-more">
-				Back to Home <a href="index.php" class="contact100-more-highlight">click here.</a>&ensp;&ensp;  Update password <a href="updatepassword.php" class="contact100-more-highlight">click here.</a> 
+            Back to Home <a href="index.php" class="contact100-more-highlight">click here.</a>&emsp;&emsp;&emsp;&emsp;@copyright greenleaf nursery
 			</div>
 		</div>
 	</div>
+   
 
 
-
-	<div id="dropDownSelect1"></div>
-<!-- 
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
-
-
-</body>
+    </body>
 </html>

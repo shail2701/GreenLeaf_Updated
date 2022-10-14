@@ -1,6 +1,6 @@
 <?php include "db_conn.php"; 
+session_start();
 ob_start();
-include "head1.php";
 ?>
 
 <?php
@@ -16,11 +16,21 @@ include "head1.php";
 
 
 ?>
+<?php
+/*
+if(isset($_GET['source'])){
 
+$price = $_GET['source'];
+ echo "Source is : ".$price;
+*/
+$price = $_SESSION['total_p'];
+
+// echo "Total Price is : ".$price;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Green Leaf Nursery Web services Page</title>
+	<title>Green Leaf Nursery Web Checkout Page</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -28,8 +38,9 @@ include "head1.php";
 
 	<!-- <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
 
-
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
 </head>
 <style>
@@ -199,7 +210,6 @@ iframe {
   left: 0;
   background: rgba(93,84,240,0.5);
   /* background: -webkit-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5)); */
-  /* background: -webkit-linear-gradient(left, #d25aff9e, #e5ff006b); */
   background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
   background: -o-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5));
   background: -moz-linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5));
@@ -280,11 +290,10 @@ iframe {
     font-size: 15px;
     color: #4b2354;
     line-height: 3.2;
-    /* padding: 1% 12%; */
-    /* border: 3px solid #df97ff; */
-    border: 5px solid rgb(151 255 217);
+    padding: 1% 12%;
+    border: 4px solid #73eabf;
     overflow: hidden;
-    padding: 6% 12%; /* padding: 2% 30%; */
+    padding: 9% 12%; /* padding: 2% 30%; */
     border-radius: 20px;
     outline:none;
     transition: all 0.4s ease-in-out;
@@ -304,7 +313,7 @@ iframe {
     color: #4b2354;
     line-height: 3.2;
     padding: 1% 12%;
-    border: 3px solid #df97ff;
+    border: 3px solid rgb(255 159 151);
     overflow: hidden;
     padding: 1% 12%;
     border-radius: 20px;
@@ -322,41 +331,13 @@ iframe {
   100% {transform: scale(1.1);}
 } */
 
-.input100succ {
-display: block;
-    width: 100%;
-    background: transparent;
-    font-family: SourceSansPro-Bold;
-    font-size: 10px;
-    font-size: 15px;
-    color: #4b2354;
-    line-height: 3.2;
-    padding: 1% 12%;
-    border: 4px solid #b5ff82;
-    overflow: hidden;
-    padding: 1% 12%;
-    border-radius: 20px;
-    outline: none;
-    transition: all 0.4s ease-in-out;
-    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
-    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 0 0px 20px 6px #9aff39;
-    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
-    /* animation: andromeda 1.5s alternate infinite cubic-bezier(0.55, 0.06, 0.68, 0.19); */
-}
-/* @keyframes andromeda {
-  0%   {transform: scale(.8);}
-  100% {transform: scale(1.05);}
-} */
 /*---------------------------------------------*/
 input.input100 {
   height: 51px;
     padding: 0 20px 0 23px;
     border-radius: 20px;
     transition: all 0.4s;
-    /* border: 3px solid #df97ff; */
-    border: 5px solid rgb(151 255 217);
+    border: 4px solid #73eabf;
     /* box-shadow: 0 10px 30px 0px #ad3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -webkit-box-shadow: inset 0px 0px 11px 0px #ad4;
@@ -370,8 +351,7 @@ textarea.input100 {
     padding: 19px 20px 0 23px;
     border-radius: 20px;
     transition: all 0.4s;
-    /* border: 3px solid #df97ff; */
-    border: 5px solid rgb(151 255 217);
+    border: 4px solid #73eabf;
     /* box-shadow: 0 10px 30px 0px #ad3;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -webkit-box-shadow: inset 0px 0px 20px 0px #ad4;
@@ -455,7 +435,7 @@ textarea.input100 {
 }
 
 .contact100-form-btn {
-    display: -webkit-box;
+  display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
@@ -465,7 +445,7 @@ textarea.input100 {
     padding: 0 20px;
     min-width: 160px;
     height: 42px;
-    background-color: #c955fd;
+    background-color: #61d6ab;
     border-radius: 16px;
     font-family: JosefinSans-Bold;
     font-size: 14px;
@@ -478,19 +458,20 @@ textarea.input100 {
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s;
-    box-shadow: 0 10px 30px 0px #df97ff;
+    box-shadow: 0 10px 30px 0px #61d6ab;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
-    -webkit-box-shadow: 0 10px 30px 0px #fa97ff;
+    -webkit-box-shadow: 0 10px 30px 0px #61d6ab;
     -o-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
     -ms-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.5);
 }
 
 .contact100-form-btn:hover {
-  background-color: #9e65b7;
-    border: 5px solid #df97ff;
-    box-shadow: 0 10px 30px 0px #9e65b7;
+  background-color: #40a285;
+    border: 5px solid #61d6ab;
+    /* border: 5px solid rgb(151 255 217); */
+    box-shadow: 0 10px 30px 0px #40a285;
     -moz-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
-    -webkit-box-shadow: 0 10px 30px 0px #9e65b7;
+    -webkit-box-shadow: 0 10px 30px 0px #40a285;
     -o-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
     -ms-box-shadow: 0 10px 30px 0px rgba(189, 89, 212, 0.8);
 }
@@ -643,7 +624,7 @@ textarea.input100 {
 }
 
 .contact100-more-highlight {
-    color: #bd59d4;
+  color: #bd59d4;
 }
 
 </style>
@@ -656,8 +637,8 @@ textarea.input100 {
 		<div class="wrap-contact100">
 			<form class="contact100-form validate-form" method="post" enctype="multipart/form-data">
 				<span class="contact100-form-title">
-				Greenleaf Services
-				</span>
+				Checkout Cart Products
+				</span><br><br>
                 <?php if (isset($_GET['error'])) { ?> 
           
                     <div class="wrap-input100 validate-input">
@@ -665,51 +646,12 @@ textarea.input100 {
                         <input class="input100err" type="text" name="email" value="<?php echo $_GET['error']; ?>" disabled>
 					        <span class="focus-input100"></span>
 				    </div>
-                <?php } ?> 
-
-                    <?php if (isset($_GET['success'])) { ?> 
-          
-                     <br><div class="wrap-input100 validate-input">
-      
-                      <input class="input100succ" type="text" name="email" value="<?php echo $_GET['success']; ?>" disabled>
-                     <span class="focus-input100"></span>
-                 </div>
-            <?php } ?>       
+                <?php } ?>       
 <hr>
 <br>
-        <div class="row">    
-        <div class="col-25">
-
-            <input class="input100" type="text" name="lname" value="service" disabled>
-                </div>            
-            <div class="col-75">
-                <div class="wrap-input100 validate-input" >
-                <?php 
-    
-    $query = "SELECT * FROM services";
-$select_all_posts_query = mysqli_query($conn,$query);
-?>
-
-                    <select class="input1001" name="snm">
-                    <?php
-                    while($row = mysqli_fetch_assoc($select_all_posts_query)){
-
-	            $post_id = $row['sid'];
-                $post_name = $row['sname'];
-                $post_detail = $row['sdetail'];
-                      
-    
-                    ?>
-                        <option ><?php echo $post_name;?> </option>
-                        <?php }?>
-                    </select>
-					<span class="focus-input100" fa fa-home ></span>
-                </div>
-            </div>
-        </div>
                 <div class="wrap-input100 validate-input">
 				<!-- <label for="">Email</label>	 -->
-                <input class="input100" type="text" name="email" value="" placeholder="ab@gmail.com" >
+                <input style="border-color:tomato;" class="input100" type="text" name="email" value="<?php echo $em; ?>" placeholder="Email" disabled>
 					<span class="focus-input100"></span>
 				</div>
 
@@ -730,7 +672,7 @@ $select_all_posts_query = mysqli_query($conn,$query);
                 </div>
                 
                 <div class="wrap-input100 validate-input">
-                    <textarea class="input100" name="address"  placeholder="Your Address"></textarea>
+                    <textarea class="input100" name="add"  placeholder="Deliver Address"></textarea>
 					<span class="focus-input100"></span>
                 </div>    
 
@@ -766,19 +708,28 @@ $select_all_posts_query = mysqli_query($conn,$query);
             </div>
         </div>
 
- 
+        <div class="row ">
+                    <div class="col-50">
+                        <div class="wrap-input100 validate-input">
+                             <!-- <label for="fname"><i class="fa fa-user"></i> First Name</label>    -->
+                             <input class="input100" type="text" name="pin" value="" placeholder="Pin-code">
+                        </div>
+                    </div>
 
+                    <div class="col-50">
                         <div class="wrap-input100 validate-input">
                             <!-- <label for="lname"><i class="fa fa-user"></i> Last Name</label> -->
                             <input class="input100" type="text" name="contact" value="" placeholder="Contact No.">
                         </div>
-                
+                    </div>
+                </div>
+				
 
        
 
 				<div class="container-contact100-form-btn">
 					<button class="contact100-form-btn" name="submit">
-						Get Service
+						Continue to checkout
 					</button>
 				</div>
 			</form>
@@ -788,152 +739,202 @@ $select_all_posts_query = mysqli_query($conn,$query);
 			</div>
 		</div>
 	</div>
+
+
     <?php
-    if(isset($_SESSION['user_name']))
-   {
-     // echo "ID IS : ".$_SESSION['user_name'];
-     $nm = $_SESSION['user_name'];
-      $sql="SELECT *  FROM users WHERE email = '$nm'";
-      $result1=mysqli_query($conn,$sql);
-   
-      while ($row = mysqli_fetch_assoc($result1)) {
-       $ids=$row["id"];
-       $u_mail=$row['email'];
-      }
-       if(isset($_POST['submit']))
-       {
-   
-    if(empty($_POST['snm']) && empty($_POST['email']) && empty($_POST['fname']) && empty($_POST['lname']) && empty($_POST['address']) && empty($_POST['city']) && empty($_POST['state'])  && empty($_POST['country']) && empty($_POST['uid']) && empty($_POST['contact']))
-       {
-        
-         header("Location: services.php?error=Fields should not be empty ");
-   
-           }
-           else
-           {
-             
-               function validate($data){
-                   $data = trim($data);
-                   $data = stripslashes($data);
-                   $data = htmlspecialchars($data);
-                   return $data;
-                }
-                function countDigit($n)
-                 {
-                   $count = 0;
+    $you=false;
+
+if(isset($_SESSION['user_name']))
+{
+  // echo "ID IS : ".$_SESSION['user_name'];
+  $nm = $_SESSION['user_name'];
+  
+   $sql="SELECT *  FROM users WHERE email = '$nm'";
+   $result1=mysqli_query($conn,$sql);
+
+   while ($row = mysqli_fetch_assoc($result1)) {
+    $ids=$row["id"];
+    $u_mail=$row['email'];
+   }
+   $_SESSION['user_id']=$ids;
+    if(isset($_POST['submit']))
+  {
+
+    if(empty($_POST['email']) && empty($_POST['fname']) && empty($_POST['lname']) && empty($_POST['add'])  && empty($_POST['pin']) && empty($_POST['contact'])){
+    
+
+      header("Location: checkout.php?error=Fields should not be empty !! ");
+        }
+        else
+        {
+            function validate($data){
+                $data = trim($data);
+                $data = stripslashes($data);
+                $data = htmlspecialchars($data);
+                
+               
+            
+                return $data;
+             }
+             function countDigit($n)
+             {
+                 $count = 0;
               
-                   $count = ceil(log10(abs($n) + 1));  
+                 $count = ceil(log10(abs($n) + 1));  
 
-                  // echo "<br>BHAD NE KAA ".$count;
-                   return $count;
-                }
-              if(empty($_POST['email']))
-                {
-        
-                  header("Location: services.php?error=Email is required..");
+                // echo "<br>BHAD NE KAA ".$count;
+                 return $count;
+             }
+            
+             if(empty($_POST['fname']))
+             {
 
-                }
-                else if(empty($_POST['fname']))
-                {
-                  header("Location: services.php?error=Please Enter First Name..");
-         
-                }
-                else if(empty($_POST['lname']))
-                {
-                    header("Location: services.php?error=Please Enter Last Name..");
-                }
-                else if(empty($_POST['address']))
-                {
-                  header("Location: services.php?error=Please Enter Address..");
-       
-                   //  exit();
-                }
-                else if(empty($_POST['city']))
-                {
-                    header("Location: services.php?error=Please Enter City Name..");
-                   //  exit();
-                }
-                else if(empty($_POST['country']))
-                {
-                    header("Location: services.php?error=Please Enter Country Name..");
-                   //  exit();
-                }
-                else if(empty($_POST['state']))
-                {
+              header("Location: checkout.php?error=Please Enter First Name !!");
+             }
+             else if(empty($_POST['lname']))
+             {
+              header("Location: checkout.php?error=Please Enter Last Name !!");
+             }
+             else if(empty($_POST['add']))
+             {
+ 
+              header("Location: checkout.php?error=Please Enter Address !!");
+             }
+             else if(empty($_POST['city']))
+             {
 
-                    header("Location: services.php?error=Please Enter State Name..");
-                }
-                else if(empty($_POST['contact']))
-                {
-                 
-                  header("Location: services.php?error=Please Enter Contact No..");
+              header("Location: checkout.php?error=Please Enter City Name !! ");
+             }
+             else if(empty($_POST['country']))
+             {
+              header("Location: checkout.php?error=Please Enter Country Name !! ");
+             }
+             else if(empty($_POST['state']))
+             {
+
+              header("Location: checkout.php?error=Please Enter State Name !! ");
+             }
+             else if(empty($_POST['pin']))
+             {
+              header("Location: checkout.php?error=Please Enter PinCode !!");
+             }
+             else if(empty($_POST['contact']))
+             {
+
+              header("Location: checkout.php?error=Please Enter Contact No !! ");
+             }
+          
+             else if(!is_numeric($_POST['pin']))
+             {
+
+              header("Location: checkout.php?error=Invalid PinCode !! ..");
+             }
+             else if(!is_numeric($_POST['contact'])  )
+             {
+
+              header("Location: checkout.php?error=Contact is invalid");
+             }
       
-                }
-                else if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
-                {
-
-                  header("Location: services.php?error=Invalid Email Address..");
-               
-                }
-               
-                else if(!is_numeric($_POST['contact']))
-                {
-
-                    header("Location: services.php?error=Invalid Contact NO..");
-                }
-                else if(countDigit($_POST['contact']) != 10)
+             else if(countDigit($_POST['contact']) != 10)
              {
      
-              header("Location: services.php?error=Invalid Contact NO..");
+              header("Location: checkout.php?error=Not valid contact 10 digit");
              }
-                else
-                {
-                  
-                    $email=validate($_POST['email']);
-                    $fname=validate($_POST['fname']);
-                    $lname=validate($_POST['lname']);
-                    $add=validate($_POST['address']);
-                    $city=validate($_POST['city']);
-                    $country=validate($_POST['country']);
-                    $state=validate($_POST['state']);
-                    $snm=$_POST['snm']; 
-                    $contact=validate($_POST['contact']);
-   
-                    $sql="INSERT INTO ser_detail(sname,email,fname,lname,address,contact,city,state,country,uid,umail) VALUE('$snm','$email','$fname','$lname','$add',$contact,'$city','$state','$country',$ids,'$u_mail')";
-   
-                    //echo "<br><br><br>".$sql;
+             else
+            {
+                
+                 $fname=validate($_POST['fname']);
+                 $lname=validate($_POST['lname']);
+                 $add=validate($_POST['add']);
+                 $city=validate($_POST['city']);
+                 $country=validate($_POST['country']);
+                 $state=validate($_POST['state']);
+                 $pin=validate($_POST['pin']);
+                 $contact=validate($_POST['contact']);
+
+                 $sql="INSERT INTO checkout(email,fname,lname,address,city,country,state,pincode,contact_no,userid,totle_price,u_mail) VALUE('$em','$fname','$lname','$add','$city','$country','$state',$pin, $contact,$ids,$price,'$u_mail')";
+                 echo "<script>alert('Your Checkout successfully Done');</script>";
+                echo "<br><br><br>".$sql;
+
+                 $result = mysqli_query($conn, $sql);
+
+
+                 if(!$result)
+                 {
+                   echo "<br><br><br>".$sql;
+                  //  header("Location: checkout.php?error=server is temporary down , please try again later...");
+                   echo "<script>alert('server is temporary down , please try again later...');</script>";
+                 }
+            else
+             {
+           
+                    // header("Location: checkout.php?success=Your Products will be Delivered within 15 days TNC apply due to current covid situation..");
+                     echo "success";
+                    // sleep(2);
                     
-                    $result = mysqli_query($conn, $sql);
-   
-   
-                    if(!$result)
-                    {
-                     header("Location: services.php?error=server is temporary down , please try again later..");
+                    $query1 ="UPDATE shoppingcart SET status = 1  WHERE uid =$ids ;";
+                     echo "<script>alert('we update your cart');</script>";
+                     echo "<br><br><br>".$query1;
+  
+                    $result = mysqli_query($conn, $query1);
+                    
+                    if(!$result){
+                      header("Location: checkout.php?error=Something went wrong with you..");
                     }
-                    else
-                   {
+                    $you = "SELECT * FROM shoppingcart WHERE uid=$ids;";
+                     echo "<br><br><br>The you is : ".$you;
+                    if ($result=mysqli_query($conn,$you))
+                    {
+                         $tol = mysqli_num_rows($result);
+                         $pop = "SELECT * FROM shop_history WHERE uid=$ids";
+                          echo "=-=-=-=-=-=-".$pop;
+                          $add_detls = mysqli_query($conn,$pop);
+
+                          $rowcount=mysqli_num_rows($add_detls);
+
+                         if($rowcount > 0)
+                         {
+                           
+                           $opp = "UPDATE `shop_history` SET lst_tot_prod=$tol WHERE uid=$ids";
+                           $res1 = mysqli_query($conn,$opp);
+                           if(!$res1){ echo "Query failed";}else{ echo "<br><br><br><br>QUERY wdf wdv FULLLY SUCESS";}
+                            echo "lole lole lole ".$opp;
+
+                         }
+                        else
+                        {
+                          
+                            
+                            $pops = "INSERT INTO shop_history (uid,umail,lst_tot_prod) VALUES ($ids,'$em',$tol)";
+                            $res = mysqli_query($conn,$pops); 
+                            if(!$res){ echo "Query failed";}else{ echo "<br><br><br><br>QUERY ew dvsv sd dFULLLY SUCESS";}
+                             echo "<br><br><br>lol lol lol ".$pops;
+                        }
+                  }
+                  else
+                  {
+                    echo "<br>opps something went wrong</br>";
+                  }
                     
-                       header("Location: services.php?success=We will contact you for more detail.");
+                    $to = $em;
+           
+                    $body1 = "";
+                    $bodyy="";
+                    $ct = "greenleaf.bhavani@gmail.com";
+                    $owner = "greenleaf.bhavani@gmail.com";
+                    $umsg = "Your Products will delivered in 5 to 7 days.";
 
-                     // echo "here we lofe";
-
-
-                       $em = $email;
-                       $body1 = "";
-                       $bodyy="";
-                       $ct = "greenleaf.bhavani@gmail.com";
-                       $owner = "greenleaf.bhavani@gmail.com";
-                       $umsg = "We received your ". $snm ." service request , we contact you soon via contact No. / email . ";
-                        $bodyy .="From : " . $owner . "<br>";//line breaking in email
-                       $bodyy .="Selected service : " . $snm . "<br>";
-                       $bodyy .="Email : " . $email . "<br>";
-                       $bodyy .="Name : " . $fname." ".$lname . "<br>";
-                       $bodyy .="Address : " . $add ." ". $city . "<br>";
-                      $body1 .="Green Leaf Nursery Services";
-
-
-                      
-                      $headers  = 'MIME-Version: 1.0' . "\r\n";
+                    $bodyy .="From : " . $owner . "\r\n";//line breaking in email
+                    $bodyy .="<br>Email : " . $em . "\r\n";
+                    $bodyy .="<br>Name : " . $fname." ".$lname . "\r\n";
+                    $bodyy .="<br>Total Price : " . $price . "\r\n";
+                    $bodyy .="<br>Address : " . $add ." ". $city . "\r\n";
+                    
+                    $body1 .="Green Leaf Nursery Product";
+                  
+                    
+                    
+                    $headers  = 'MIME-Version: 1.0' . "\r\n";
                       $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
                        
                       // Create email headers
@@ -990,31 +991,126 @@ $select_all_posts_query = mysqli_query($conn,$query);
                       font-weight: 500;
                       text-align: center;
                       border-radius: 10px;
-                      -webkit-box-shadow: 0px 0px 20px 4px #9aff39f2;">'.$umsg.'</tr></p><tr><span style="padding: 2% 40%;
+                      -webkit-box-shadow: 0px 0px 20px 4px #9aff39f2;">'.$umsg.'</tr></p><tr><span style="padding: 2% 39%;
                       background-color: #baef5e;text-align: center;border-radius: 9px;color: white;">Thankyou so much</span></tr>';
                       $message .= '</tbody></table></div></body></html>';
                       
-                      mail($em, $body1, $message, $headers);
-                     
+                      mail($to, $body1, $message, $headers);
+                    
+                    //mail($to,$ct,$body);
+
+                    /* HERE OID FETCH */
+
+                    $del1 = "SELECT * FROM `checkout` WHERE userid=$ids  ORDER BY oid desc LIMIT 1";
+                         echo "<br>".$del1."<br>";
+                         $result4 = mysqli_query($conn, $del1);
+                         if(!$result4)
+                         {
+                             echo " woww  ";
+                         }
+                         else
+                         {
+                             
+                             $rowcount=mysqli_num_rows($result4);
+                             if($rowcount == 0)
+                             {
+                                 echo "<center style='color:red';>Not Found</center>";
+                            }
+                            else
+                            {
+                             while ($row = mysqli_fetch_assoc($result4)) 
+                              {
+                                   $ll = $row["oid"];
+                              }
+                            }
+
+                         }
+                    /*---- */
+
+
+
+                     $uid=$_SESSION['id'];
+                  
+                         
+                            $sql1 = "SELECT * FROM shoppingcart WHERE  uid=$uid AND status=1";
+                             echo "<br><br><br>".$sql1;
+                            $result = mysqli_query($conn, $sql1);
+                            $total_price=0;
+                            
+                  
+                            if (mysqli_num_rows($result) > 0) 
+                            {
+                              $i=0;
+                        while ($row1 = mysqli_fetch_assoc($result)) 
+                      {  
+                          $i+=1;
+                    
+                        
+
+                         $pimg  = $row1["image"];
+                         $pnm  = $row1["name"];
+                         $pp  = $row1["price"];
+                         $pq  = $row1["quantity"];
+                         $pt  = $row1["date_created"];
+                         echo "i is :".$i;
+                         $sql1="INSERT INTO ordered(order_id,uid,prod_name,image,price,quantity,umail,item_time) VALUE ($ll,$uid,'$pnm','$pimg',$pp,$pq,'$nm','$pt')";
+                          echo "<br><br><br>".$sql1;
+                         $result1 = mysqli_query($conn, $sql1);
+                         if(!$result1)
+                         {
+                          die ("Error in query:". $sql1);
+                         }
+                      }
+                      $result2 = mysqli_query($conn, $sql1);
+                      if(!$result2)
+                      {
+                          echo "YOUR PRODUCT COULD NOT GONE IN ORDER ...";
+                      }
+                      $del = "DELETE FROM shoppingcart WHERE uid=$uid";
+                      //echo "<br>".$del;
+                      $result3 = mysqli_query($conn, $del);
+                      if(!$result3)
+                      {
+                          echo "<br>Product could not deleted.";
+                      }
+                      else
+                      {
+
+                         echo "del del del";
+              
+                              // $sql12="UPDATE `ordered` SET order_id=$ll WHERE uid=$uid";
+                              // $result4 = mysqli_query($conn, $sql12);
+                              // if(!$result4){ echo "yaar nahi ho raha :( "; }else{ echo "yaar ho gya samjo :) ";}
+                       
+                      }
+                         header('location:bills.php');
+                      }
+                    
                     }
-   
-   
-   
-   
+                  
+                  }
+            }
+
                 }
-   
-           }
-       }
-     }
-     else
-     {
-       echo  "<script>alert('You are not detected : Please login..')</script>";
-       sleep(1);
-      header('location:login.php');
-     }
+                  
+                
+            }
+
+          
+        
+  
+
+else
+{
+
+    header("Location: ckout.php?error=You are not detected : Please login....");
+    sleep(1);
+     header('location:login.php');
+}
+ 
     ?>
 
 
 
-    </body>
+</body>
 </html>

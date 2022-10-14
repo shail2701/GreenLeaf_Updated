@@ -2,6 +2,24 @@
 session_start();
 ob_start();
 ?>
+<?php
+
+function strongpass($data)
+	{
+		$uppercase = preg_match('@[A-Z]@', $data);
+		$lowercase = preg_match('@[a-z]@', $data);
+		$number    = preg_match('@[0-9]@', $data);
+		$specialChars = preg_match('@[^\w]@', $data);
+		if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($data) < 8) {
+			//	echo ' should be at least 8 characters in length and should include at least one upper case letter, one number, and one special character.';
+			
+        return 1;
+		}else{
+			return $data;
+		}
+	}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +28,8 @@ ob_start();
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="icon" type="image/png" href="tree1.png"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 	<!-- <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css"> -->
 
@@ -189,7 +209,20 @@ iframe {
   background: linear-gradient(left, rgba(0,168,255,0.5), rgba(185,0,255,0.5));
   pointer-events: none;
 }
-
+.contact100-form-title {
+  padding: 2%;
+    display: block;
+    font-family: SourceSansPro-Bold;
+    font-size: 30px;
+    color: black;
+    line-height: 1.2;
+    border-radius: 25px;
+    text-align: center;
+    /* border: 6px solid #dedede; */
+    -webkit-box-shadow: 0px 0px 20px 6px rgb(0 0 0 / 18%);
+    margin-bottom: 10%;
+    background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
+}
 .contact100-map {
   position: absolute;
   z-index: -2;
@@ -220,15 +253,7 @@ iframe {
   width: 100%;
 }
 
-.contact100-form-title {
-  display: block;
-    font-family: SourceSansPro-Bold;
-    font-size: 30px;
-    color: #333333;
-    line-height: 1.2;
-    text-align: center;
-    padding-bottom: 34px;
-}
+
 
 /*------------------------------------------------------------------
 [ Input ]*/
@@ -333,20 +358,7 @@ textarea.input100 {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 }
-.contact100-form-title {
-  padding: 2%;
-    display: block;
-    font-family: SourceSansPro-Bold;
-    font-size: 30px;
-    color: black;
-    line-height: 1.2;
-    border-radius: 25px;
-    text-align: center;
-    /* border: 6px solid #dedede; */
-    -webkit-box-shadow: 0px 0px 20px 6px rgb(0 0 0 / 18%);
-    margin-bottom: 10%;
-    background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
-}
+
 .file-typ{
   padding: 10px;
     background: -webkit-linear-gradient(left, rgb(151 255 217), #e5ff006b);
@@ -492,7 +504,52 @@ textarea.input100 {
   color: #fa4251;
   line-height: 1.2;
 }
-
+.input100succ {
+display: block;
+    width: 100%;
+    background: transparent;
+    font-family: SourceSansPro-Bold;
+    font-size: 10px;
+    font-size: 15px;
+    color: #4b2354;
+    line-height: 3.2;
+    padding: 1% 12%;
+    border: 4px solid #b5ff82;
+    overflow: hidden;
+    padding: 1% 12%;
+    border-radius: 20px;
+    outline: none;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 0px 20px 6px #9aff39;
+    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    /* animation: andromeda 1.5s alternate infinite cubic-bezier(0.55, 0.06, 0.68, 0.19); */
+}
+.input100err {
+    display: block;
+    width: 100%;
+    background: transparent;
+    font-family: SourceSansPro-Bold;
+    font-size: 10px;
+    font-size: 15px;
+    color: #4b2354;
+    line-height: 3.2;
+    padding: 1% 12%;
+    border: 3px solid #df97ff;
+    overflow: hidden;
+    padding: 1% 12%;
+    border-radius: 20px;
+    outline: none;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 5px 20px 0px rgb(0 0 0 / 5%);
+    -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 0px 20px 6px rgb(255 82 82 / 98%);
+    -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.05);
+    /* animation: andromeda 1.5s alternate infinite ease-in; */
+}
 .btn-hide-validate {
   font-family: Material-Design-Iconic-Font;
   font-size: 15px;
@@ -579,70 +636,85 @@ textarea.input100 {
             	{
             		while ($row = mysqli_fetch_assoc($result)) 
             		{
-                  global $oldimg;
-
-            			$ids=$row["id"];
-            			$umail=$row['email'];
-            			$unm=$row['name'];
-                  $pass=$row['password'];
-                  $img=$row['img'];
-                  $contact=$row['contact'];  
-                  $address=$row['address'];
-                  // echo "-----------".strlen($contact);
-                  //echo "-------".$img , $contact , $address;
-                  if($contact == NULL && $img == NULL && $address == NULL)
-                  {
-                    $img = "prof.png";
-                    $contact =  $address = "";
-                    //echo "************".$img , $contact , $address;
-                  }
-                  $oldimg = $img;
+                   $pass=$row['password'];
+  
+                
             		}
             	}
-              if(isset($_POST['update_profile'])){
+              ?>
+             <?php if(isset($_POST['update_pass'])){
 
-
-                    $post_unm=$_POST['name'];
-                    $post_image = $_FILES['img']['name'];
-                    $post_image_temp = $_FILES['img']['tmp_name'];
-                    $post_contact=$_POST['contact'];  
-                    $post_address=$_POST['address'];
-                    if($post_image_temp!="") {
-                        move_uploaded_file($post_image_temp, "images/$post_image" );
+                    
+                    $post_pass=$_POST['oldpass'];  
+                    $post_newpass=$_POST['newpass'];
+                    $post_newrepass=$_POST['newrepass'];
+                  
+                    if($post_pass==NULL){
+                   
+                      header("Location: updatepassword.php?error=Old Password Blank.");
+                      
                     }
-                    else{
-                            $post_image = $oldimg;
-                    }
-                
-                  //echo "-----------".strlen($post_contact);
-                  if(strlen($post_contact) != 10)
-                  {
-                    // echo "contact should be 10 digit";
-                    echo "<script>alert('contact should be 10 digit');</script>";
-                  }
-                  else
-                  {
-
-                        $query = "UPDATE users SET name = '{$post_unm}',img = '{$post_image}',contact = '{$post_contact}', address= '{$post_address}' WHERE email = '{$em}'";
+                    
+                   else if($post_pass!=$pass){
+                        
+                        header("Location: updatepassword.php?error=Old Password is wrong.");
+                       
+                      }
+                     
+                    else
+                    {
+                      if($post_newpass=="" || $post_newrepass==""){
+                        
+                        header("Location: updatepassword.php?error=Discard Empty Password !");
+                       
+                      }
+                      else if($post_pass==$post_newpass)
+                      {
+                        header("Location: updatepassword.php?error=Do not enter old password as new.");
+                      }
+                      else
+                      {
+                        if($post_newpass!=$post_newrepass){
+                          echo $post_newpass."   -**-**-  ".$post_newrepass;
+                         header("Location: updatepassword.php?error=Both Password and Repassword Not same !");
+                        }
+                        else
+                        {
+                          if(strongpass($post_newpass)==1 || strongpass($post_newrepass)==1){
+                            echo $post_newpass."   ---  ".$post_newrepass;
+                               //header("Location: updatepassword.php?error=Password atleast contain 1 capital latter, 1 special character and length should be 8  !");
+                          }
+                          else
+                          {  
+                            echo $post_newpass."   -/*/*/*--  ".$post_newrepass;
+                              $query = "UPDATE users SET password = '{$post_newpass}' WHERE email = '{$em}'";
          
 
-                        //echo "<br><br>".$query;
-              
-                       $update_post = mysqli_query($conn,$query);
-     
-                      if(!$update_post){
-     
-                       die("QUERY FAILED ." . mysqli_error($conn));
-        
+                            echo "<br><br>".$query;
+
+                            $update_post = mysqli_query($conn,$query);
+
+                            if(!$update_post){
+                          
+                              die("QUERY FAILED ." . mysqli_error($conn));
+                          
+                            }
+                            else
+                            { 
+                               header("Location: updatepassword.php?success=Updated successfully ");
+                            }
+                          }
+                        }
                       }
-                     header("refresh: 3");
+                    
+                    }
+                    
                   }
-              }
+                            // header("refresh: 3");
             }
+                    
             else
             {
-                  $ids = $umail = $unm = $pass = $contact = $img = $address =" Guest User";
-                  sleep(2);
                   header("location:login.php");
             }	    
 
@@ -653,52 +725,88 @@ textarea.input100 {
 
 
 		<div class="wrap-contact100">
-			<form class="contact100-form validate-form" method="post" enctype="multipart/form-data">
+			<form class="contact100-form validate-form" action="" method="post" enctype="multipart/form-data">
 				<span class="contact100-form-title">
-				Profile
+				Update Password
 				</span>
+  
 
-       
+        <?php if (isset($_GET['error'])) { ?> 
+          
+          <div class="wrap-input100 validate-input">
+
+              <input class="input100err" type="text" name="email" value="<?php echo $_GET['error']; ?>" disabled>
+        <span class="focus-input100"></span>
+  </div>
+      <?php } ?> 
+      <?php if (isset($_GET['success'])) { ?> 
+          
+          <div class="wrap-input100 validate-input">
+
+              <input class="input100succ" type="text" name="email" value="<?php echo $_GET['success']; ?>" disabled>
+        <span class="focus-input100"></span>
+  </div>
+      <?php } ?> 
+      
+       <br>
         <div class="wrap-input100 validate-input" data-validate = "">
-          <div class="input1001">
-          <img class="input-img" width="200" src="images/<?php echo $img; ?>" alt="">
-					<input  class="file-typ" type="file" name="img" placeholder="Your image" > 
-					<span class="focus-input100"></span>
-          </div>
-				</div>
-
+      
 				<div class="wrap-input100 validate-input" data-validate="Please enter your name">
-					<input class="input100" type="text" name="name" value="<?php echo $unm; ?>" placeholder="User Name">
+					<input class="input100" type="password" id="myInput" name="oldpass" placeholder="Old Password">
 					<span class="focus-input100" fa fa-home ></span>
 				</div>
 
 				<div class="wrap-input100 validate-input" data-validate = "Please enter email: e@a.x">
-					<input class="input100" type="text" name="email" value="<?php echo $umail; ?>" placeholder="Email" disabled>
+					<input class="input100" type="password" id="myInput1" name="newpass" placeholder="New Password">
 					<span class="focus-input100"></span>
 				</div>
         
         <div class="wrap-input100 validate-input" data-validate = "Please enter contact">
-					<input class="input100" type="text" name="contact" value="<?php echo $contact;?>" placeholder="Your Contact No.">
+					<input class="input100" type="password" id="myInput2" name="newrepass" placeholder="New Repassword">
 					<span class="focus-input100"></span>
 				</div>
-
-				<div class="wrap-input100 validate-input" data-validate = "">
-					<textarea class="input100" name="address"  placeholder="Your Address"><?php echo $address;?></textarea>
-					<span class="focus-input100"></span>
-				</div>
-
-       
+                <div class="show"><input type="checkbox" class="check" onclick="myFunction()" title="show password"><span> show password</span></div><br>
 
 				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn" name="update_profile">
-						Update profile
-					</button>
+					<button class="contact100-form-btn" name="update_pass">
+						Update password
+					</button><br><br><br>
+
+          <?php if (isset($_GET['error'])) { 
+					if($_GET['error']==="Old Password is wrong."){?>
+				<br><a class="contact100-form-btn" style="text-decoration:none;" href="Forgotpass/forgot.php">Forgot your password? click me</a>
+				<?php }} ?>
+
 				</div>
-    
+                <script>
+						function myFunction() {
+						  var x = document.getElementById("myInput");
+						  if (x.type === "password") {
+						    x.type = "text";
+						  } else {
+						    x.type = "password";
+						  }
+              var x = document.getElementById("myInput1");
+						  if (x.type === "password") {
+						    x.type = "text";
+						  } else {
+						    x.type = "password";
+						  }
+              var x = document.getElementById("myInput2");
+						  if (x.type === "password") {
+						    x.type = "text";
+						  } else {
+						    x.type = "password";
+						  }
+						}
+
+					
+				</script>
+
 			</form>
 
 			<div class="contact100-more">
-				Back to Home <a href="index.php" class="contact100-more-highlight">click here.</a>&ensp;&ensp;  Update password <a href="updatepassword.php" class="contact100-more-highlight">click here.</a> 
+				<span style="padding-right:24%;">Back to Home <a href="index.php" class="contact100-more-highlight">click here.</a></span style=""><span>  Back to Profile <a href="profile.php" class="contact100-more-highlight">click here.</a></span>
 			</div>
 		</div>
 	</div>
